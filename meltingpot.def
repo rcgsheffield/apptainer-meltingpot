@@ -1,0 +1,51 @@
+# Meltingpot apptainer definition file
+# https://apptainer.org/docs/user/latest/definition_files.html
+# https://github.com/google-deepmind/meltingpot
+
+# Build:
+# apptainer build --force meltingpot.sif meltingpot.def
+# rsync -v meltingpot.sif stanage:~/meltingpot.sif
+
+# Run Python console:
+# srun --pty /usr/local/bin/apptainer run ~/meltingpot.sif
+# Run Linux shell:
+# srun --pty /usr/local/bin/apptainer shell ~/meltingpot.sif
+
+Bootstrap: docker
+From: python:3.11-slim-bullseye
+
+%arguments
+  # Google Deepmind Lab2D
+  # https://github.com/google-deepmind/lab2d
+  LAB2D_WHEEL_URL="https://files.pythonhosted.org/packages/72/06/2847a06f5d4486a19eefbb2e7e36bd2094fe211f0955daf8844b86012db0/dmlab2d-1.0.0-cp311-cp311-manylinux_2_31_x86_64.whl"
+
+%setup
+  wget "{{LAB2D_WHEEL_URL}}"
+
+%files
+  dmlab2d-1.0.0-cp311-cp311-manylinux_2_31_x86_64.whl
+
+%post
+  pip install --upgrade pip
+  
+  # Install Deepmind Lab2D
+  pip install $(basename "{{LAB2D_WHEEL_URL}}")
+
+  # Install Deepmind Meltingpot
+  pip install dm-meltingpot
+
+%runscript
+  python
+
+%test
+  python --version
+  python -c "import lab2d"
+  python -c "import meltingpot"
+
+%labels
+  Author j.heffer@sheffield.ac.uk
+  Version v0.0.1
+
+%help
+  This defines a container image to provide an environment to
+  run Google Deepmind Meltingpot.
