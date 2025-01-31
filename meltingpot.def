@@ -41,10 +41,12 @@ From: python:3.11-slim-bullseye
   python --version
   python -c "import lab2d"
   python -c "import meltingpot"
+  # https://www.tensorflow.org/guide/gpu
+  python -c "import tensorflow as tf; tf.config.list_physical_devices('GPU')"
 
 %labels
   Author j.heffer@sheffield.ac.uk
-  Version v0.0.1
+  Version v0.0.2
 
 %help
   This defines a container image to provide an environment to
