@@ -28,6 +28,12 @@ To run a Python terminal
 
 ## HPC usage
 
+Test the container is working correctly
+
+```bash
+srun --pty /usr/local/bin/apptainer test meltingpot.sif
+```
+
 To run an interactive job using SLURM
 
 ```bash
